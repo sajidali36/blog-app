@@ -4,7 +4,15 @@ import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 
 const RegisterPage: React.FC = () => {
-  const [user, setUser] = useState<User>({ username: '', email: '', password: '' });
+  const users = JSON.parse(localStorage.getItem('users') || '[]');
+  let uid;
+  if (users.length > 0) {
+    const lastUser = users[users.length - 1];
+    uid = lastUser.id + 1;
+  } else {
+    uid = 1;
+  }
+  const [user, setUser] = useState<User>({ id: uid, name: '', email: '', password: '' });
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,8 +24,8 @@ const RegisterPage: React.FC = () => {
     const users = JSON.parse(localStorage.getItem('users') || '[]');
     localStorage.setItem('users', JSON.stringify([...users, user]));
     alert('Registration successful!');
-    setUser({ username: '', email: '', password: '' });
-    navigate('/');
+    setUser({ id: 0, name: '', email: '', password: '' });
+    navigate('/login');
   };
 
   return (
@@ -25,7 +33,7 @@ const RegisterPage: React.FC = () => {
       <form className="w-50 mx-auto mt-4" onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Name</label>
-          <input type="text" className="form-control" name="username" value={user.username} onChange={handleChange} required />
+          <input type="text" className="form-control" name="name" value={user.name} onChange={handleChange} required />
         </div>
         <div className="mb-3">
           <label className="form-label">Email address</label>
