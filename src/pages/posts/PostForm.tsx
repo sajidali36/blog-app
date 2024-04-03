@@ -29,6 +29,7 @@ const PostForm: React.FC<Props> = ({ initialPost, onSave }) => {
 
   return (
     <form className="w-50 mx-auto mt-5" onSubmit={handleSubmit}>
+      <button className="btn btn-secondary mb-3" onClick={() => navigate(-1)}>Go Back</button>
       <div className="mb-3">
         <label className="Htmlm-label">Title</label>
         <input type="text" className="form-control" name="title" value={post.title} onChange={handleChange} required />
