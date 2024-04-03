@@ -8,7 +8,8 @@ interface Props {
 }
 
 const PostForm: React.FC<Props> = ({ initialPost, onSave }) => {
-  const [post, setPost] = useState<Post>({ id: 0, title: '', content: '' });
+  const uid = localStorage.getItem('currentUserId');
+  const [post, setPost] = useState<Post>(initialPost || { id: 0, title: '', body: '', userId: uid });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const PostForm: React.FC<Props> = ({ initialPost, onSave }) => {
       </div>
       <div className="mb-3">
         <label className="form-label">Content</label>
-        <textarea name="content" className="form-control h-50" value={post.content} onChange={handleChange} required />
+        <textarea name="body" className="form-control h-50" value={post.body} onChange={handleChange} required />
       </div>
       <button type="submit" className="btn btn-primary">Submit</button>
     </form>

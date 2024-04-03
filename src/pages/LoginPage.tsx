@@ -24,6 +24,8 @@ const LoginPage: React.FC = () => {
     if (userExists) {
       setAuthenticated(true);
       localStorage.setItem('isAuthenticated', 'true');
+      const user = users.find((user: any) => user.email === credentials.email && user.password === credentials.password);
+      localStorage.setItem('currentUserId', user.id);
       navigate('/');
     } else {
       alert('Invalid credentials!');
