@@ -11,6 +11,7 @@ import PostForm from './pages/posts/PostForm';
 import AllPosts from './pages/posts/AllPosts';
 import ViewPost from './pages/posts/ViewPost';
 import { Comment } from './Types';
+import NavBar from './components/NavBar';
 
 function App() {
   const navigate = useNavigate();
@@ -69,19 +70,22 @@ function App() {
     navigate("/postsform");
   };
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path='/register' element={<RegisterPage />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/postsform" element={<PostForm initialPost={editingPost} onSave={savePost} />} />
-          <Route path="/posts" element={<PostsList posts={posts} onDelete={deletePost} onEdit={editPost} />} />
-          <Route path="/allposts" element={<AllPosts posts={posts} />} />
-          <Route path="/post/:postId" element={<ViewPost posts={posts} comments={comments} setCommentsState={setComments} />} />
-        </Route>
-      </Routes>
-    </AuthProvider>
+    <>
+      <NavBar />
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path='/register' element={<RegisterPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/postsform" element={<PostForm initialPost={editingPost} onSave={savePost} />} />
+            <Route path="/posts" element={<PostsList posts={posts} onDelete={deletePost} onEdit={editPost} />} />
+            <Route path="/allposts" element={<AllPosts posts={posts} />} />
+            <Route path="/post/:postId" element={<ViewPost posts={posts} comments={comments} setCommentsState={setComments} />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
+    </>
   );
 }
 

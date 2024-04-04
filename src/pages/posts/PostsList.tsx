@@ -25,6 +25,7 @@ const PostsList: React.FC<Props> = ({ posts, onDelete, onEdit }) => {
         <div className="mt-3" key={post.id}>
           <h2>{post.title}</h2>
           <p>{post.body}</p>
+          <button className="btn btn-info mx-2 mt-4"><Link to={`/post/${post.id}`} className="text-decoration-none text-white">View Post</Link></button>
           <button className="btn btn-info mx-2 mt-4" onClick={() => onEdit(post)}>Edit</button>
           <button className="btn btn-danger mt-4" onClick={() => onDelete(post.id)}>Delete</button>
         </div>
