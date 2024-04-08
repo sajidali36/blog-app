@@ -12,79 +12,54 @@ import AllPosts from './pages/posts/AllPosts';
 import ViewPost from './pages/posts/ViewPost';
 import { Comment } from './Types';
 import NavBar from './components/NavBar';
+import { store } from './store';
+import { Provider } from 'react-redux';
 
 function App() {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState<Post[]>([]);
   const [editingPost, setEditingPost] = useState<Post | undefined>(undefined);
 
   const [comments, setComments] = useState<Comment[]>([]);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const response = await fetch('https://jsonplaceholder.typicode.com/posts');
-      const data = await response.json();
+  // useEffect(() => {
+  //   const fetchComments = async () => {
+  //     const allComments = [];
 
-      const adaptedPosts = data.map((post: any) => ({ ...post }));
-      setPosts(adaptedPosts);
-    };
+  //     for (const currentPost of posts) {
+  //       const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${currentPost.id}/comments`);
+  //       const data = await response.json();
 
-    fetchPosts();
-  }, []);
+  //       const adaptedComments = data.map((comment: any) => ({ ...comment }));
+  //       allComments.push(...adaptedComments);
+  //     };
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      const allComments = [];
+  //     setComments(allComments);
+  //   };
 
-      for (const currentPost of posts) {
-        const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${currentPost.id}/comments`);
-        const data = await response.json();
-
-        const adaptedComments = data.map((comment: any) => ({ ...comment }));
-        allComments.push(...adaptedComments);
-      };
-
-      setComments(allComments);
-    };
-
-    fetchComments();
-  }, []);
-
-
-  const savePost = (post: Post) => {
-    if (post.id) {
-      setPosts(posts.map((p) => (p.id === post.id ? post : p)));
-    } else {
-      const newPost = { ...post, id: Date.now() };
-      setPosts([...posts, newPost]);
-    }
-    setEditingPost(undefined);
-  };
-
-  const deletePost = (postId: number) => {
-    setPosts(posts.filter((post) => post.id !== postId));
-  };
+  //   fetchComments();
+  // }, []);
 
   const editPost = (post: Post) => {
-    setEditingPost(post);
     navigate("/postsform");
   };
   return (
     <>
-      <NavBar />
-      <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path='/register' element={<RegisterPage />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/postsform" element={<PostForm initialPost={editingPost} onSave={savePost} />} />
-            <Route path="/posts" element={<PostsList posts={posts} onDelete={deletePost} onEdit={editPost} />} />
-            <Route path="/allposts" element={<AllPosts posts={posts} />} />
-            <Route path="/post/:postId" element={<ViewPost posts={posts} comments={comments} setCommentsState={setComments} />} />
-          </Route>
-        </Routes>
-      </AuthProvider>
+      <Provider store={store}>
+        <NavBar />
+        <AuthProvider>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path='/register' element={<RegisterPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/postsform" element={<PostForm initialPost={editingPost} />} />
+              <Route path="/posts" element={<PostsList onEdit={editPost} />} />
+              <Route path="/allposts" element={<AllPosts />} />
+              <Route path="/post/:postId" element={<ViewPost comments={comments} setCommentsState={setComments} />} />
+            </Route>
+          </Routes>
+        </AuthProvider>
+      </Provider>
     </>
   );
 }

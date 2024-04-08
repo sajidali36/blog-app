@@ -3,14 +3,16 @@ import { Post } from '../../Types';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import CommentPage from '../comments/CommentPage';
 import { Comment } from '../../Types';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface Props {
-  posts: Post[];
   comments: Comment[];
   setCommentsState: React.Dispatch<React.SetStateAction<Comment[]>>;
 }
 
-const ViewPost: React.FC<Props> = ({ posts, comments, setCommentsState }) => {
+const ViewPost: React.FC<Props> = ({ comments, setCommentsState }) => {
+  const dispatch = useDispatch();
+  const posts: Post[] = useSelector((state: any) => state.posts.posts);
   const navigate = useNavigate();
   const { postId } = useParams();
   const post = posts.find((post: any) => post.id == postId);

@@ -1,13 +1,17 @@
 import { Link, useNavigate } from "react-router-dom"
-import { Post } from "../../Types";
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchPosts, savePost, deletePost } from './../../features/PostsSlice';
 
-interface Props {
-  posts: Post[];
-}
-
-const AllPosts: React.FC<Props> = ({ posts }) => {
+const AllPosts = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const posts = useSelector((state: any) => state.posts.posts);
+  const editingPost = useSelector((state: any) => state.posts.editingPost);
+
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
 
   if (posts.length === 0) {
     return <div className="w-50 mx-auto mt-5">
@@ -19,7 +23,7 @@ const AllPosts: React.FC<Props> = ({ posts }) => {
   return (
     <div className="w-50 mx-auto">
       <button className="btn btn-secondary my-3" onClick={() => navigate(-1)}>Go Back</button>
-      {posts.map((post) => (
+      {posts.map((post: any) => (
         <div className="mt-3" key={post.id}>
           <h2>{post.title}</h2>
           <p>{post.body}</p>
@@ -30,7 +34,8 @@ const AllPosts: React.FC<Props> = ({ posts }) => {
         <Link to="/" > Main Page</Link>
       </div>
     </div>
-  )
-}
 
-export default AllPosts
+  );
+};
+
+export default AllPosts;
