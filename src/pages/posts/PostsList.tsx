@@ -1,14 +1,16 @@
 import React from 'react';
 import { Post } from '../../Types';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { deletePost, } from './../../features/PostsSlice';
 
 interface Props {
-  posts: Post[];
-  onDelete: (postId: number) => void;
   onEdit: (post: Post) => void;
 }
 
-const PostsList: React.FC<Props> = ({ posts, onDelete, onEdit }) => {
+const PostsList: React.FC<Props> = ({ onEdit }) => {
+  const dispatch = useDispatch();
+  const posts: Post[] = useSelector((state: any) => state.posts.posts);
   if (posts.length === 0) {
     return <div className="w-50 mx-auto mt-5">
       Posts does not exist.
@@ -27,7 +29,7 @@ const PostsList: React.FC<Props> = ({ posts, onDelete, onEdit }) => {
           <p>{post.body}</p>
           <button className="btn btn-info mx-2 mt-4"><Link to={`/post/${post.id}`} className="text-decoration-none text-white">View Post</Link></button>
           <button className="btn btn-info mx-2 mt-4" onClick={() => onEdit(post)}>Edit</button>
-          <button className="btn btn-danger mt-4" onClick={() => onDelete(post.id)}>Delete</button>
+          <button className="btn btn-danger mt-4" onClick={() => dispatch(deletePost(post.id))}>Delete</button>
         </div>
       ))}
       <div className="mt-4">

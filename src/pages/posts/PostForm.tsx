@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Post } from '../../Types';
 import { useNavigate } from 'react-router-dom';
+import { savePost } from './../../features/PostsSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface Props {
   initialPost?: Post;
-  onSave: (post: Post) => void;
 }
 
-const PostForm: React.FC<Props> = ({ initialPost, onSave }) => {
+const PostForm: React.FC<Props> = ({ initialPost }) => {
   const uid = localStorage.getItem('currentUserId');
   const [post, setPost] = useState<Post>(initialPost || { id: 0, title: '', body: '', userId: uid });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
   useEffect(() => {
     if (initialPost) setPost(initialPost);
@@ -23,7 +26,7 @@ const PostForm: React.FC<Props> = ({ initialPost, onSave }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(post);
+    dispatch(savePost(post));
     navigate("/posts");
   };
 
